@@ -2,16 +2,17 @@
 {
     public class BasicSkill : ISkill
     {
-        public string Name { get; set; }
-        public Characteristic SkillCharacteristic { get; set; }
+        public string Name { get; set; } = null!;
+        public Characteristic SkillCharacteristic { get; set; } = null!;
         public int Advances { get; set; }
-        public int Current { get => CurrentValue; set => CurrentValue = SkillCharacteristic.Current + Advances; }
-        private int CurrentValue { get; set; }
+        public int Current => SkillCharacteristic.Current + Advances;
 
+        /*
         public BasicSkill(string name, Characteristic skillCharacteristic)
         {
             this.Name = name;
             this.SkillCharacteristic = skillCharacteristic;
         }
+        */
     }
 }

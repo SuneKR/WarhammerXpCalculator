@@ -1,0 +1,194 @@
+﻿@page "/sheet"
+<h2>@Character.Name's CharacterSheet</h2>
+
+<div>
+    <h3>@Character.Name</h3>
+    <div style="display: flex; display-direction: row;">
+        <p>Player: @Character.Player</p>
+        &emsp;
+        <p>Party: @Character.Party</p>
+        &emsp;
+        <p>Species: @Character.Species</p>
+        &emsp;
+        <p>Size: @Character.Size</p>
+    </div>
+    <div style="display: flex; display-direction: row;">
+        <p>Career: @Character.Career</p>
+        &emsp;
+        <p>Career Tier: @Character.CareerTier</p>
+        &emsp;
+        <p>Class: @Character.Class</p>
+        &emsp;
+        <p>Status: @Character.Status</p>
+    </div>
+    <div style="display: flex; display-direction: row;">
+        <p>Age: @Character.Age</p>
+        &emsp;
+        <p>Eyes: @Character.Eyes</p>
+        &emsp;
+        <p>Hair: @Character.Hair</p>
+        &emsp;
+        <p>Height: @Character.Height</p>
+        &emsp;
+        <p>Star Sign: @Character.StarSign</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Motivation</th>
+                <th>&emsp;</th>
+                <th>Shortterm Ambition</th>
+                <th>&emsp;</th>
+                <th>Longterm Ambition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Character.motivation</td>
+                <td>&emsp;</td>
+                <td>@Character.ShortTermAmbition</td>
+                <td>&emsp;</td>
+                <td>@Character.LongTermAmbition</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Characteristics</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>WS</th>
+            <th>BS</th>
+            <th>S</th>
+            <th>T</th>
+            <th>I</th>
+            <th>Ag</th>
+            <th>Dex</th>
+            <th>Int</th>
+            <th>WP</th>
+            <th>Fel</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Intial</td>
+            <td>@Character.cWS.Initial</td>
+            <td>@Character.cBS.Initial</td>
+            <td>@Character.cS.Initial</td>
+            <td>@Character.cT.Initial</td>
+            <td>@Character.cI.Initial</td>
+            <td>@Character.cAg.Initial</td>
+            <td>@Character.cDex.Initial</td>
+            <td>@Character.cInt.Initial</td>
+            <td>@Character.cWP.Initial</td>
+            <td>@Character.cFel.Initial</td>
+        </tr>
+        <tr>
+            <td>Advances</td>
+            <td>@Character.cWS.Advances</td>
+            <td>@Character.cBS.Advances</td>
+            <td>@Character.cS.Advances</td>
+            <td>@Character.cT.Advances</td>
+            <td>@Character.cI.Advances</td>
+            <td>@Character.cAg.Advances</td>
+            <td>@Character.cDex.Advances</td>
+            <td>@Character.cInt.Advances</td>
+            <td>@Character.cWP.Advances</td>
+            <td>@Character.cFel.Advances</td>
+        </tr>
+        <tr>
+            <td>Current</td>
+            <td>@Character.cWS.Current</td>
+            <td>@Character.cBS.Current</td>
+            <td>@Character.cS.Current</td>
+            <td>@Character.cT.Current</td>
+            <td>@Character.cI.Current</td>
+            <td>@Character.cAg.Current</td>
+            <td>@Character.cDex.Current</td>
+            <td>@Character.cInt.Current</td>
+            <td>@Character.cWP.Current</td>
+            <td>@Character.cFel.Current</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Basic Skills</h3>
+@if (Character.BasicSkills != null && Character.BasicSkills.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <th>Name</th>
+            <th>Cha</th>
+            <th>Cha#</th>
+            <th>Adv</th>
+            <th>Skill</th>
+        </thead>
+        <tbody>
+            @foreach (var bs in Character.BasicSkills)
+            {
+                <tr>
+                    <td>@bs.Name</td>
+                    <td>@bs.SkillCharacteristic.ShortName</td>
+                    <td>@bs.SkillCharacteristic.Current</td>
+                    <td>@bs.Advances</td>
+                    <td>@bs.Current</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>Advanced Skills</h3>
+@if (Character.AdvancedSkills != null && Character.AdvancedSkills.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <th>Name</th>
+            <th>Cha</th>
+            <th>Cha#</th>
+            <th>Adv</th>
+            <th>Skill</th>
+        </thead>
+        <tbody>
+            @foreach (var ads in Character.AdvancedSkills)
+            {
+                <tr>
+                    <td>@ads.Name</td>
+                    <td>@ads.SkillCharacteristic.ShortName</td>
+                    <td>@ads.SkillCharacteristic.Current</td>
+                    <td>@ads.Advances</td>
+                    <td>@ads.Current</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>Talents</h3>
+@if (Character.Talents != null && Character.Talents.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <th>Name</th>
+            <th>Times taken</th>
+            <th>Description</th>
+        </thead>
+        <tbody>
+            @foreach (var t in Character.Talents)
+            {
+                <tr>
+                    <td>@t.Name</td>
+                    <td>@t.TimesTaken</td>
+                    <td>@t.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+
+}
