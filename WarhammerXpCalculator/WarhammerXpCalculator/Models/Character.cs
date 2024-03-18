@@ -1,4 +1,6 @@
-﻿namespace WarhammerXpCalculator.Models
+﻿using WarhammerXpCalculator.Models.Skills;
+
+namespace WarhammerXpCalculator.Models
 {
     public class Character
     {
@@ -26,6 +28,14 @@
         public Characteristic WP { get; set; }
         public Characteristic Fel { get; set; }
 
+        //Basic skills
+        //public BasicSkill ArtAny(string "Art", Characteristic Dex)
+        List<BasicSkill> BasicSkills = new List<BasicSkill>
+        { 
+            new BasicSkill {Name = "Art", SkillCharacteristic = Dex},
+        
+        };
+
         public Character(string name, string species, string @class, string career, string careerTier, string size, int age, string height, string hair, string eyes, string starSign, Characteristic wS, Characteristic bS, Characteristic s, Characteristic t, Characteristic i, Characteristic ag, Characteristic dex, Characteristic @int, Characteristic wP, Characteristic fel)
         {
             Name = name;
@@ -52,16 +62,5 @@
         }
     }
 
-    public class Characteristic
-    {
-        public int Initial { get; set; }
-        public int Advances { get; set; }
-        public int Current => Initial + Advances;
-
-        public Characteristic(int initialValue)
-        {
-            Initial = initialValue;
-            Advances = 0;
-        }
-    }
+    
 }
