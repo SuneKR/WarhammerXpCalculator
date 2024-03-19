@@ -1,36 +1,38 @@
 ﻿@page "/sheet"
+@layout CharacterSheetLayout
+
 <h2>@Character.Name's CharacterSheet</h2>
 
 <div>
-    <h3>@Character.Name</h3>
+    <h3><input type="text" value="@Character.Name" name="Name"></h3>
     <div style="display: flex; display-direction: row;">
-        <p>Player: @Character.Player</p>
+        <strong>Player: </strong><input type="text" value="@Character.Player" name="player">
         &emsp;
-        <p>Party: @Character.Party</p>
+        <strong>Party: </strong><input type="text" value="@Character.Party.Name" name="Party">
         &emsp;
-        <p>Species: @Character.Species</p>
+        <strong>Species: </strong><input type="text" value="@Character.Species" name="Species">
         &emsp;
-        <p>Size: @Character.Size</p>
+        <strong>Size: </strong><input type="text" value="@Character.Size" name="Size">
     </div>
     <div style="display: flex; display-direction: row;">
-        <p>Career: @Character.Career</p>
+        <strong>Career: </strong><input type="text" value="@Character.Career" name="Career">
         &emsp;
-        <p>Career Tier: @Character.CareerTier</p>
+        <strong>CareerTier: </strong><input type="text" value="@Character.CareerTier" name="CareerTier">
         &emsp;
-        <p>Class: @Character.Class</p>
+        <strong>Class: </strong><input type="text" value="@Character.Class" name="Class">
         &emsp;
-        <p>Status: @Character.Status</p>
+        <strong>Status: </strong><input type="text" value="@Character.Status" name="Status">
     </div>
     <div style="display: flex; display-direction: row;">
-        <p>Age: @Character.Age</p>
+        <strong>Age: </strong><input type="text" value="@Character.Age" name="Age">
         &emsp;
-        <p>Eyes: @Character.Eyes</p>
+        <strong>Eyes: </strong><input type="text" value="@Character.Eyes" name="Eyes">
         &emsp;
-        <p>Hair: @Character.Hair</p>
+        <strong>Hair: </strong><input type="text" value="@Character.Hair" name="Hair">
         &emsp;
-        <p>Height: @Character.Height</p>
+        <strong>Height: </strong><input type="text" value="@Character.Height" name="Height">
         &emsp;
-        <p>Star Sign: @Character.StarSign</p>
+        <strong>StarSign: </strong><input type="text" value="@Character.StarSign" name="StarSign">
     </div>
     <table>
         <thead>
@@ -40,19 +42,58 @@
                 <th>Shortterm Ambition</th>
                 <th>&emsp;</th>
                 <th>Longterm Ambition</th>
+                <th>&emsp;</th>
+                <th>Shortterm Party Ambition</th>
+                <th>&emsp;</th>
+                <th>Longterm Party Ambition</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>@Character.motivation</td>
+                <td><input type="text" value="@Character.Motivation" name="Motivation"></td>
                 <td>&emsp;</td>
-                <td>@Character.ShortTermAmbition</td>
+                <td><input type="text" value="@Character.ShortTermAmbition" name="ShortTermAmbition"></td>
                 <td>&emsp;</td>
-                <td>@Character.LongTermAmbition</td>
+                <td><input type="text" value="@Character.LongTermAmbition" name="LongTermAmbition"></td>
+                <td>&emsp;</td>
+                <td><input type="text" value="@Character.Party.ShortTermPartyAmbition" name="ShortTermPartyAmbition"></td>
+                <td>&emsp;</td>
+                <td><input type="text" value="@Character.Party.LongTermPartyAmbition" name="LongTermPartyAmbition"></td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<h3>Experience</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Xp Individual</th>
+            <td>&emsp;</td>
+            <th>Xp Party</th>
+            <td>&emsp;</td>
+            <th>Xp Total</th>
+            <td>&emsp;</td>
+            <th>Xp Spent</th>
+            <td>&emsp;</td>
+            <th>Xp Unspent</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="number" value="@Character.ExperienceGainIndividually" name="XpIndividually" onkeypress="updateValue(event, this)"</td>
+            <td>&emsp;</td>
+            <td><input type="number" value="@Character.Party.PartyAwardedXP" name="XpParty"</td>
+            <td>&emsp;</td>
+            <td><p>@Character.XpTotal()</p></td>
+            <td>&emsp;</td>
+            <td><input type="number" value="@Character.ExperienceSpent" name="XpSpent"</td>
+            <td>&emsp;</td>
+            <td><p>@Character.XpUnspent()</p></td>
+        </tr>
+    </tbody>
+</table>
+
 
 <h3>Characteristics</h3>
 <table class="table">
@@ -74,29 +115,29 @@
     <tbody>
         <tr>
             <td>Intial</td>
-            <td>@Character.cWS.Initial</td>
-            <td>@Character.cBS.Initial</td>
-            <td>@Character.cS.Initial</td>
-            <td>@Character.cT.Initial</td>
-            <td>@Character.cI.Initial</td>
-            <td>@Character.cAg.Initial</td>
-            <td>@Character.cDex.Initial</td>
-            <td>@Character.cInt.Initial</td>
-            <td>@Character.cWP.Initial</td>
-            <td>@Character.cFel.Initial</td>
+            <td><input type="number" value="@Character.cWS.Initial" name="cWS.Initial"></td>
+            <td><input type="number" value="@Character.cBS.Initial" name="cBS.Initial"></td>
+            <td><input type="number" value="@Character.cS.Initial" name="cS.Initial"></td>
+            <td><input type="number" value="@Character.cT.Initial" name="cT.Initial"></td>
+            <td><input type="number" value="@Character.cI.Initial" name="cI.Initial"></td>
+            <td><input type="number" value="@Character.cAg.Initial" name="cAg.Initial"></td>
+            <td><input type="number" value="@Character.cDex.Initial" name="cDex.Initial"></td>
+            <td><input type="number" value="@Character.cInt.Initial" name="cInt.Initial"></td>
+            <td><input type="number" value="@Character.cWP.Initial" name="cWP.Initial"></td>
+            <td><input type="number" value="@Character.cFel.Initial" name="cFel.Initial"></td>
         </tr>
         <tr>
             <td>Advances</td>
-            <td>@Character.cWS.Advances</td>
-            <td>@Character.cBS.Advances</td>
-            <td>@Character.cS.Advances</td>
-            <td>@Character.cT.Advances</td>
-            <td>@Character.cI.Advances</td>
-            <td>@Character.cAg.Advances</td>
-            <td>@Character.cDex.Advances</td>
-            <td>@Character.cInt.Advances</td>
-            <td>@Character.cWP.Advances</td>
-            <td>@Character.cFel.Advances</td>
+            <td><input type="number" value="@Character.cWS.Advances" name="cWS.Advances"></td>
+            <td><input type="number" value="@Character.cBS.Advances" name="cBS.Advances"></td>
+            <td><input type="number" value="@Character.cS.Advances" name="cS.Advances"></td>
+            <td><input type="number" value="@Character.cT.Advances" name="cT.Advances"></td>
+            <td><input type="number" value="@Character.cI.Advances" name="cI.Advances"></td>
+            <td><input type="number" value="@Character.cAg.Advances" name="cAg.Advances"></td>
+            <td><input type="number" value="@Character.cDex.Advances" name="cDex.Advances"></td>
+            <td><input type="number" value="@Character.cInt.Advances" name="cInt.Advances"></td>
+            <td><input type="number" value="@Character.cWP.Advances" name="cWP.Advances"></td>
+            <td><input type="number" value="@Character.cFel.Advances" name="cFel.Advances"></td>
         </tr>
         <tr>
             <td>Current</td>
@@ -132,7 +173,7 @@
                     <td>@bs.Name</td>
                     <td>@bs.SkillCharacteristic.ShortName</td>
                     <td>@bs.SkillCharacteristic.Current</td>
-                    <td>@bs.Advances</td>
+                    <td><input type="number" value="@bs.Advances" name="bs.Advances"></td>
                     <td>@bs.Current</td>
                 </tr>
             }
@@ -158,7 +199,7 @@
                     <td>@ads.Name</td>
                     <td>@ads.SkillCharacteristic.ShortName</td>
                     <td>@ads.SkillCharacteristic.Current</td>
-                    <td>@ads.Advances</td>
+                    <td><input type="number" value="@ads.Advances" name="ads.Advances"></td>
                     <td>@ads.Current</td>
                 </tr>
             }
@@ -180,8 +221,9 @@
             {
                 <tr>
                     <td>@t.Name</td>
-                    <td>@t.TimesTaken</td>
-                    <td>@t.Description</td>
+                    <td><input type="text" size="20" value="@t.Name" name="t.Name"></td>
+                    <td><input type="number" value="@t.TimesTaken" name="t.TimesTaken"></td>
+                    <td><input type="text" size="45" value="@t.Description" name="t.Description"></td>
                 </tr>
             }
         </tbody>

@@ -6,8 +6,9 @@ namespace WarhammerXpCalculator.Models
     public class Character
     {
         public int Id { get; set; }
-        public string Player { get; set; }
-        public string Party { get; set; }
+        public string Player { get; set; } = "Sune";
+        //public string PartyId { get; set; }
+        public virtual Party Party { get; set; } = new Party(0, "fightning Mongooses", "Fight a beaver", "Fight a dragon", 450);
         public string Name { get; set; }
         public string Species { get; set; }
         public string Class { get; set; }
@@ -45,15 +46,14 @@ namespace WarhammerXpCalculator.Models
         public int FortunePoints { get; set; }
         public int ResiliencePoints { get; set; }
         public int ResolvePoints { get; set; }
-        public string motivation { get; set; }
+        public string Motivation { get; set; }
         public string ShortTermAmbition { get; set; }
         public string LongTermAmbition { get; set; }
         public int MovementMove { get; set; }
         public int MovementWalk { get; set; }
         public int MovementRun { get; set; }
-        public int ExperienceCurrent { get; set; }
+        public int ExperienceGainIndividually{ get; set; }
         public int ExperienceSpent { get; set; }
-        public int ExperienceTotal { get; set; }
         public int Wounds { get; set; }
 
 
@@ -89,7 +89,9 @@ namespace WarhammerXpCalculator.Models
             MovementMove = move;
             MovementWalk = move * 2;
             MovementRun = move * 4;
-
+            Motivation = motivation;
+            ShortTermAmbition = shortTermAmbition;
+            LongTermAmbition = longTermAmbition;
 
             BasicSkills = new List<BasicSkill>
             {
@@ -120,9 +122,16 @@ namespace WarhammerXpCalculator.Models
                 new BasicSkill { Name = "Row", SkillCharacteristic = cS },
                 new BasicSkill { Name = "Stealth (Every)", SkillCharacteristic = cAg },
             };
-            this.motivation = motivation;
-            ShortTermAmbition = shortTermAmbition;
-            LongTermAmbition = longTermAmbition;
+        }
+
+        public int XpTotal()
+        {
+            return ExperienceGainIndividually + Party.PartyAwardedXP;
+        }
+
+        public int XpUnspent()
+        {
+            return XpTotal() - ExperienceSpent;
         }
     }
 
