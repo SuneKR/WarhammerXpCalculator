@@ -1,0 +1,55 @@
+﻿@page "/characters"
+@inject HttpClient Http
+
+<h3>Characters</h3>
+
+@if (characters == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Player</th>
+                <th>Party</th>
+                <th>Career</th>
+                <th>CareerTier</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in characters)
+            {
+                <tr>
+                    <td>c.Name</td>
+                    <td>c.Player</td>
+                    <td>c.Party.Name</td>
+                    <td>c.Career</td>
+                    <td>c.CarrerTier</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Character[]? characters;
+
+    protected override async Task OnInitializedAsync()
+    {
+        characters = await Http.GetFromJsonAsync<Character[]>("api/Characters");
+
+    }
+
+    internal class Character
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Player { get; set; }
+        public string Party { get; set; }
+        public string Career { get; set; }
+        public string CarrerTier { get; set; }
+    }
+}

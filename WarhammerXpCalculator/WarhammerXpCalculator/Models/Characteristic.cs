@@ -2,6 +2,7 @@
 {
     public class Characteristic
     {
+        public string Id { get; set; }
         public string LongName { get; set; }
         public string ShortName { get; set; }
         public int Initial { get; set; }
@@ -15,13 +16,8 @@
             Initial = initialValue;
             Advances = 0;
         }
-        public Characteristic(string lname, string sname)
-        {
-            LongName = lname;
-            ShortName = sname;
-            Initial = 0;
-            Advances = 0;
-        }
+        public Characteristic(string lname, string sname) : this(lname, sname, 0) { }
+        public Characteristic() : this("", "", 0) { }
         public void GenerateInitial()
         {
             Random rng = new Random();

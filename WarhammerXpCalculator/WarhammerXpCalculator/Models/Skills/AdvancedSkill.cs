@@ -2,6 +2,7 @@
 {
     public class AdvancedSkill : ISkill
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public Characteristic SkillCharacteristic { get; set; }
         public int Advances { get; set; }
@@ -13,5 +14,6 @@
             SkillCharacteristic = skillCharacteristic;
             Advances = 1;
         }
+        public AdvancedSkill() : this("",new Characteristic()) { }
     }
 }

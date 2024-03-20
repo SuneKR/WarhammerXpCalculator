@@ -55,10 +55,7 @@ namespace WarhammerXpCalculator.Models
         public int ExperienceGainIndividually{ get; set; }
         public int ExperienceSpent { get; set; }
         public int Wounds { get; set; }
-
-
-
-
+       
         public Character(string name, string species, string @class, string career, string careerTier, string size, int age, string height, string hair, string eyes, string starSign, string motivation, string shortTermAmbition, string longTermAmbition, int fate, int resilience, int move)
         {
             Name = name;
@@ -123,6 +120,7 @@ namespace WarhammerXpCalculator.Models
                 new BasicSkill { Name = "Stealth (Every)", SkillCharacteristic = cAg },
             };
         }
+        public Character() : this("","","","","","",0,"","","","","","","",0,0,0) { }
 
         public int XpTotal()
         {

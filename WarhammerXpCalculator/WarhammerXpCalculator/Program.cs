@@ -1,11 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using WarhammerXpCalculator.Client.Pages;
 using WarhammerXpCalculator.Components;
+using WarhammerXpCalculator.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddControllers();
+
+builder.Services.AddDbContext<WarhammerXpCalcDB>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WarhammerXpCalcDB")));
+
+var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
 
 var app = builder.Build();
 
@@ -20,6 +29,7 @@ else
 }
 
 app.UseStaticFiles();
+app.MapControllers();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

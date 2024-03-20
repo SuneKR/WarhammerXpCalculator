@@ -1,0 +1,105 @@
+﻿@page "/parties"
+@inject HttpClient Http
+@* @rendermode InteractiveServer *@
+@* @rendermode InteractiveWebAssembly *@
+
+<h3>Parties</h3>
+
+<button class="btn-success" @onclick="TogglePopup">New AdventuringParty</button>
+<button class="btn-success" @onclick="@TogglePopup">New AdventuringParty</button>
+@if (@ShowPopup)
+{
+    <div class="popup-container">
+        <div class="popup">
+            <h4>Party Info</h4>
+            <input type="text" @bind="tempParty.Name" placeholder="Name" /><br />
+            <input type="text" @bind="tempParty.ShortTermPartyAmbition" placeholder="Aquiring Rags" /><br />
+            <input type="text" @bind="tempParty.LongTermPartyAmbition" placeholder="quiring Riches" /><br />
+            <input type="number" @bind="tempParty.PartyAwardedXP" placeholder="0" /><br />
+            <button class="brn-success" @onclick="CreateParty">Create</button>
+            <button class="brn-warning" @onclick="TogglePopup">Cancel</button>
+            <button class="brn-danger" @onclick="ClearPopup">Reset</button>
+        </div>
+    </div>
+}
+
+@if (parties == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Shortterm Amibition</th>
+                <th>Longterm Amibition</th>
+                <th>Xp Awarded</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in parties)
+            {
+                <tr>
+                    <td>p.Name</td>
+                    <td>p.ShortTermPartyAmbition</td>
+                    <td>p.LongTermPartyAmbition</td>
+                    <td>p.PartyAwardedXP</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    internal Party[]? parties;
+    internal Party newParty = new Party();
+    internal Party tempParty = new Party();
+    internal bool ShowPopup = false;
+    internal int counter = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        parties = await Http.GetFromJsonAsync<Party[]>("api/Parties");
+    }
+
+    internal class Party
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShortTermPartyAmbition { get; set; }
+        public string LongTermPartyAmbition { get; set; }
+        public int PartyAwardedXP { get; set; }
+    }
+
+    internal void TogglePopup()
+    {
+        ShowPopup = !ShowPopup;
+        tempParty = newParty;
+        //counter++;
+    }
+
+    internal void ClearPopup()
+    {
+        tempParty = new Party();
+    }
+
+    internal async void CreateParty()
+    {
+        var response = await Http.PostAsJsonAsync("api/Parties", tempParty);
+        if (response.IsSuccessStatusCode)
+        {
+            parties = await Http.GetFromJsonAsync<Party[]>("api/Parties");
+            newParty = tempParty;
+            ClearPopup();
+            TogglePopup();
+        }
+        else
+        {
+            Console.WriteLine("Error: not added");
+        }
+    }
+}
