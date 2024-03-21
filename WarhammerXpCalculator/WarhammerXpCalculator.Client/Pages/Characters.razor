@@ -1,7 +1,10 @@
 ﻿@page "/characters"
 @inject HttpClient Http
+@rendermode InteractiveWebAssembly
 
 <h3>Characters</h3>
+<input type="text" @bind="newCharacter.Name" placeholder="Name" />
+<button class="btn-primary" @onclick="CreateCharacter">New Character</button>
 
 @if (characters == null)
 {
@@ -13,10 +16,16 @@ else
         <thead>
             <tr>
                 <th>Name</th>
+                <th>&emsp;</th>
                 <th>Player</th>
+                <th>&emsp;</th>
                 <th>Party</th>
+                <th>&emsp;</th>
                 <th>Career</th>
+                <th>&emsp;</th>
                 <th>CareerTier</th>
+                <th>&emsp;</th>
+                <th>Actions:</th>
             </tr>
         </thead>
         <tbody>
@@ -24,10 +33,19 @@ else
             {
                 <tr>
                     <td>c.Name</td>
+                    <td>&emsp;</td>
                     <td>c.Player</td>
+                    <td>&emsp;</td>
                     <td>c.Party.Name</td>
+                    <td>&emsp;</td>
                     <td>c.Career</td>
+                    <td>&emsp;</td>
                     <td>c.CarrerTier</td>
+                    <td>&emsp;</td>
+                    <td>
+                        <button class="btn-primary" @onclick="() => EditCharacter(c.Id)">Edit</button>
+                        <button class="btn-danger" @onclick="() => DeleteCharacter(c.Id)">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -36,11 +54,11 @@ else
 
 @code {
     private Character[]? characters;
+    private Character newCharacter = new Character();
 
     protected override async Task OnInitializedAsync()
     {
         characters = await Http.GetFromJsonAsync<Character[]>("api/Characters");
-
     }
 
     internal class Character
@@ -51,5 +69,40 @@ else
         public string Party { get; set; }
         public string Career { get; set; }
         public string CarrerTier { get; set; }
+    }
+
+    internal async void UpdateCharacters()
+    {
+        characters = await Http.GetFromJsonAsync<Character[]>("api/Characters");
+    }
+
+    internal async void CreateCharacter()
+    {
+        Console.WriteLine("Trying to create new character");
+
+        var response = await Http.PostAsJsonAsync("api/Character", newCharacter);
+        if (response.IsSuccessStatusCode)
+        {
+            UpdateCharacters();
+        }
+        else
+        {
+            Console.WriteLine("Error. Not added.");
+        }
+    }
+
+    internal void EditCharacter(int id)
+    {
+        
+    }
+
+    internal void UpdateCharacter(int id)
+    {
+
+    }
+
+    internal void DeleteCharacter(int id)
+    {
+
     }
 }

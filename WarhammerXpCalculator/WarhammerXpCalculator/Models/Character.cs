@@ -1,5 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
 using WarhammerXpCalculator.Models.Skills;
+using static System.Net.WebRequestMethods;
 
 namespace WarhammerXpCalculator.Models
 {
@@ -24,6 +26,22 @@ namespace WarhammerXpCalculator.Models
 
         //Characteristics
         public Characteristic cWS { get; set; } = new Characteristic("Weapon Skill", "WS");
+        /*
+        public Characteristic cWS { get; set; } = await InitializeCharacteristic("Weapon Skill", "WS");
+
+        public async Task<Characteristic> InitializeCharacteristic(string lname, string sname)
+        {
+            var response = await Http.PostAsJsonAsync("api/Characteristics", new Characteristic(lname, sname));
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Characteristic>();
+            }
+            return null;
+        }
+        //var response = await Http.PostAsJsonAsync("api/Characteristics", newCharacter);
+        //api/Characteristics
+        */
+
         public Characteristic cBS { get; set; } = new Characteristic("Ballistic Skill", "BS");
         public Characteristic cS { get; set; } = new Characteristic("Strength", "S");
         public Characteristic cT { get; set; } = new Characteristic("Toughness", "T");
@@ -69,7 +87,7 @@ namespace WarhammerXpCalculator.Models
             Hair = hair;
             Eyes = eyes;
             StarSign = starSign;
-            cWS.GenerateInitial();   
+            cWS.GenerateInitial();
             cBS.GenerateInitial();
             cS.GenerateInitial();
             cT.GenerateInitial();

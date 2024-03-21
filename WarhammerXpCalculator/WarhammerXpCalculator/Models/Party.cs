@@ -25,5 +25,13 @@
             LongTermPartyAmbition = longTermPartyAmbition;
             PartyAwardedXP = partyAwardedXP;
         }
+
+        public Party() 
+        {
+            Name = "";
+            ShortTermPartyAmbition = "";
+            LongTermPartyAmbition = "";
+            PartyAwardedXP = 0;
+        }
     }
 }

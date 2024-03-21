@@ -9,15 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Party.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\Party.razor" />
   </ItemGroup>
 
 </Project>

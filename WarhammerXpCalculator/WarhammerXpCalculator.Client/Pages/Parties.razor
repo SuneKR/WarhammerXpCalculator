@@ -1,24 +1,22 @@
 ﻿@page "/parties"
 @inject HttpClient Http
-@* @rendermode InteractiveServer *@
-@* @rendermode InteractiveWebAssembly *@
+@rendermode InteractiveWebAssembly
 
 <h3>Parties</h3>
 
-<button class="btn-success" @onclick="TogglePopup">New AdventuringParty</button>
-<button class="btn-success" @onclick="@TogglePopup">New AdventuringParty</button>
-@if (@ShowPopup)
+<button class="btn-primary" @onclick="TogglePopup">New AdventuringParty</button>
+@if (ShowCreatePopup)
 {
     <div class="popup-container">
         <div class="popup">
             <h4>Party Info</h4>
-            <input type="text" @bind="tempParty.Name" placeholder="Name" /><br />
-            <input type="text" @bind="tempParty.ShortTermPartyAmbition" placeholder="Aquiring Rags" /><br />
-            <input type="text" @bind="tempParty.LongTermPartyAmbition" placeholder="quiring Riches" /><br />
-            <input type="number" @bind="tempParty.PartyAwardedXP" placeholder="0" /><br />
-            <button class="brn-success" @onclick="CreateParty">Create</button>
-            <button class="brn-warning" @onclick="TogglePopup">Cancel</button>
-            <button class="brn-danger" @onclick="ClearPopup">Reset</button>
+            <strong>Name:</strong><input type="text" @bind="newParty.Name" placeholder="Name" /><br />
+            <strong>Shortterm Ambition:</strong><input type="text" @bind="newParty.ShortTermPartyAmbition" placeholder="Aquiring Rags" /><br />
+            <strong>Longterm Ambition:</strong><input type="text" @bind="newParty.LongTermPartyAmbition" placeholder="Aquiring Riches" /><br />
+            <strong>XP Awarded:</strong> <input type="number" @bind="newParty.PartyAwardedXP" placeholder="0" /><br />
+            <button class="btn-success" @onclick="CreateParty">Create</button>
+            <button class="btn-warning" @onclick="TogglePopup">Cancel</button>
+            <button class="btn-danger" @onclick="ClearPopup">Reset</button>
         </div>
     </div>
 }
@@ -33,23 +31,50 @@ else
         <thead>
             <tr>
                 <th>Name</th>
+                <th>&emsp;</th>
                 <th>Shortterm Amibition</th>
+                <th>&emsp;</th>
                 <th>Longterm Amibition</th>
+                <th>&emsp;</th>
                 <th>Xp Awarded</th>
+                <th>&emsp;</th>
+                <th>Actions:</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var p in parties)
             {
                 <tr>
-                    <td>p.Name</td>
-                    <td>p.ShortTermPartyAmbition</td>
-                    <td>p.LongTermPartyAmbition</td>
-                    <td>p.PartyAwardedXP</td>
+                    <td>@p.Name</td>
+                    <td>&emsp;</td>
+                    <td>@p.ShortTermPartyAmbition</td>
+                    <td>&emsp;</td>
+                    <td>@p.LongTermPartyAmbition</td>
+                    <td>&emsp;</td>
+                    <td>@p.PartyAwardedXP</td>
+                    <td>&emsp;</td>
+                    <td>
+                        <button class="btn-primary" @onclick="() => EditParty(p.Id)">Edit</button>
+                        <button class="btn-danger" @onclick="() => DeleteParty(p.Id)">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+    @if (ShowEditPopup)
+    {
+        <div class="popup-container">
+            <div class="popup">
+                <h4>Party editor</h4>
+                <strong>Name:</strong><input type="text" @bind-value="editedParty.Name" /><br />
+                <strong>Shortterm Ambition:</strong><input type="text" @bind-value="editedParty.ShortTermPartyAmbition" /><br />
+                <strong>Longterm Ambition:</strong><input type="text" @bind-value="editedParty.LongTermPartyAmbition" /><br />
+                <strong>XP Awarded:</strong> <input type="number" @bind-value="editedParty.PartyAwardedXP" /><br />
+                <button class="brn-success" @onclick="() => UpdateParty(editedParty.Id)">Update</button>
+                <button class="brn-warning" @onclick="CloseEdit">Cancel</button>
+            </div>
+        </div>
+    }
 }
 
 
@@ -57,9 +82,9 @@ else
 @code {
     internal Party[]? parties;
     internal Party newParty = new Party();
-    internal Party tempParty = new Party();
-    internal bool ShowPopup = false;
-    internal int counter = 0;
+    internal Party? editedParty = new Party();
+    internal bool ShowCreatePopup = false;
+    internal bool ShowEditPopup = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,29 +102,75 @@ else
 
     internal void TogglePopup()
     {
-        ShowPopup = !ShowPopup;
-        tempParty = newParty;
-        //counter++;
+        ShowCreatePopup = !ShowCreatePopup;
+    }
+
+    internal void ToggleEditPopup()
+    {
+        ShowEditPopup = !ShowEditPopup;
     }
 
     internal void ClearPopup()
     {
-        tempParty = new Party();
+        newParty = new Party();
     }
 
     internal async void CreateParty()
     {
-        var response = await Http.PostAsJsonAsync("api/Parties", tempParty);
+        var response = await Http.PostAsJsonAsync("api/Parties", newParty);
         if (response.IsSuccessStatusCode)
         {
             parties = await Http.GetFromJsonAsync<Party[]>("api/Parties");
-            newParty = tempParty;
             ClearPopup();
             TogglePopup();
         }
         else
         {
             Console.WriteLine("Error: not added");
+        }
+    }
+
+    internal async void EditParty(int id)
+    {
+        editedParty = await Http.GetFromJsonAsync<Party>($"api/Parties/{id}");
+        if(editedParty != null)
+        {
+            ShowEditPopup = true;
+            ShowCreatePopup = false;
+        }
+        else
+        {
+            Console.WriteLine($"Error party with id { id } not found");
+        }
+
+    }
+
+    internal async void UpdateParty(int id)
+    {
+        Party? updatedParty = editedParty;
+        if (updatedParty != null)
+        {
+            var response = await Http.PutAsJsonAsync($"api/Parties/{id}", updatedParty);
+            if (response.IsSuccessStatusCode)
+            {
+                parties = await Http.GetFromJsonAsync<Party[]>("api/Parties");
+                ShowEditPopup = false;
+                ShowCreatePopup = false;
+            }
+        }
+    }
+
+    internal void CloseEdit()
+    {
+        ShowEditPopup = false;
+    }
+
+    internal async void DeleteParty(int id)
+    {
+        var response = await Http.DeleteAsync($"api/Parties/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            parties = await Http.GetFromJsonAsync<Party[]>("api/Parties");
         }
     }
 }
