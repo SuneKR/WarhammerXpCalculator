@@ -4,6 +4,7 @@
 
 <h3>Characters</h3>
 <input type="text" @bind="newCharacter.Name" placeholder="Name" />
+<input type="text" @bind="newCharacter.Player" placeholder="Player" />
 <button class="btn-primary" @onclick="CreateCharacter">New Character</button>
 
 @if (characters == null)
@@ -36,7 +37,7 @@ else
                     <td>&emsp;</td>
                     <td>@c.Player</td>
                     <td>&emsp;</td>
-                    <td>@c.Party.Name</td>
+                    <td>@c.GetPartyName()</td>
                     <td>&emsp;</td>
                     <td>@c.Career</td>
                     <td>&emsp;</td>
@@ -55,6 +56,7 @@ else
 @code {
     private Character[]? characters;
     private Character newCharacter = new Character();
+    [Inject] private NavigationManager NavManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,6 +71,12 @@ else
         public Party Party { get; set; }
         public string Career { get; set; }
         public string CarrerTier { get; set; }
+
+        public string GetPartyName()
+        {
+            if (Party != null ) { return Party.Name; }
+            return "";
+        }
     }
 
     internal class Party
@@ -87,19 +95,14 @@ else
 
     internal async void CreateCharacter()
     {
-        var response = await Http.PostAsJsonAsync("api/Characters", new { Name = newCharacter.Name });
+        var response = await Http.PostAsJsonAsync("api/Characters", new { Name = newCharacter.Name, Player = newCharacter.Player });
         if (response.IsSuccessStatusCode) { UpdateCharacters(); }
         else { Console.WriteLine("Error. Not added."); }
     }
 
     internal void EditCharacter(int id)
     {
-        
-    }
-
-    internal void UpdateCharacter(int id)
-    {
-
+        NavManager.NavigateTo($"/sheet/{id}");
     }
 
     internal async void DeleteCharacter(int id)

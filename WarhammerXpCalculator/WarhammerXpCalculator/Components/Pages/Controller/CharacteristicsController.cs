@@ -24,14 +24,14 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Characteristic>>> GetCharacteristic()
         {
-            return await _context.Characteristic.ToListAsync();
+            return await _context.Characteristics.ToListAsync();
         }
 
         // GET: api/Characteristics/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Characteristic>> GetCharacteristic(string id)
         {
-            var characteristic = await _context.Characteristic.FindAsync(id);
+            var characteristic = await _context.Characteristics.FindAsync(id);
 
             if (characteristic == null)
             {
@@ -77,7 +77,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         [HttpPost]
         public async Task<ActionResult<Characteristic>> PostCharacteristic(Characteristic characteristic)
         {
-            _context.Characteristic.Add(characteristic);
+            _context.Characteristics.Add(characteristic);
             try
             {
                 await _context.SaveChangesAsync();
@@ -101,13 +101,13 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacteristic(string id)
         {
-            var characteristic = await _context.Characteristic.FindAsync(id);
+            var characteristic = await _context.Characteristics.FindAsync(id);
             if (characteristic == null)
             {
                 return NotFound();
             }
 
-            _context.Characteristic.Remove(characteristic);
+            _context.Characteristics.Remove(characteristic);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -115,7 +115,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
 
         private bool CharacteristicExists(string id)
         {
-            return _context.Characteristic.Any(e => e.Id == id);
+            return _context.Characteristics.Any(e => e.Id == id);
         }
     }
 }

@@ -1,0 +1,387 @@
+﻿@page "/sheet/{id}"
+@inject HttpClient Http
+@rendermode InteractiveWebAssembly
+
+@if (charac == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@charac.Name's CharacterSheet</h2>
+
+    <div>
+        <h3><input type="text" @bind-value="charac.Name"/></h3>
+        <div style="display: flex; display-direction: row;">
+            <strong>Player: </strong><input type="text" @bind-value="charac.Player" name="player"/>
+            &emsp;
+            <strong>Party: </strong><input type="text" @bind-value="charac.PartyName" name="Party"/>
+            &emsp;
+            <strong>Species: </strong><input type="text" @bind-value="charac.Species" name="Species"/>
+            &emsp;
+            <strong>Size: </strong><input type="text" @bind-value="charac.Size" name="Size"/>
+        </div>
+        <div style="display: flex; display-direction: row;">
+            <strong>Career: </strong><input type="text" @bind-value="charac.Career" name="Career"/>
+            &emsp;
+            <strong>CareerTier: </strong><input type="text" @bind-value="charac.CareerTier" name="CareerTier"/>
+            &emsp;
+            <strong>Class: </strong><input type="text" @bind-value="charac.Class" name="Class"/>
+            &emsp;
+            <strong>Status: </strong><input type="text" @bind-value="charac.Status" name="Status"/>
+        </div>
+        <div style="display: flex; display-direction: row;">
+            <strong>Age: </strong><input type="text" @bind-value="charac.Age" name="Age"/>
+            &emsp;
+            <strong>Eyes: </strong><input type="text" @bind-value="charac.Eyes" name="Eyes"/>
+            &emsp;
+            <strong>Hair: </strong><input type="text" @bind-value="charac.Hair" name="Hair"/>
+            &emsp;
+            <strong>Height: </strong><input type="text" @bind-value="charac.Height" name="Height"/>
+            &emsp;
+            <strong>StarSign: </strong><input type="text" @bind-value="charac.StarSign" name="StarSign"/>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Motivation</th>
+                    <th>&emsp;</th>
+                    <th>Shortterm Ambition</th>
+                    <th>&emsp;</th>
+                    <th>Longterm Ambition</th>
+                    <th>&emsp;</th>
+                    <th>Shortterm Party Ambition</th>
+                    <th>&emsp;</th>
+                    <th>Longterm Party Ambition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" @bind-value="charac.Motivation"/></td>
+                    <td>&emsp;</td>
+                    <td><input type="text" @bind-value="charac.ShortTermAmbition"/></td>
+                    <td>&emsp;</td>
+                    <td><input type="text" @bind-value="charac.LongTermAmbition"/></td>
+                    <td>&emsp;</td>
+                    <td><input type="text" @bind-value="charac.PartySTA"/></td>
+                    <td>&emsp;</td>
+                    <td><input type="text" @bind-value="charac.PartyLTA" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Experience</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Xp Individual</th>
+                <th>&emsp;</th>
+                <th>Xp Party</th>
+                <th>&emsp;</th>
+                <th>Xp Total</th>
+                <th>&emsp;</th>
+                <th>Xp Spent</th>
+                <th>&emsp;</th>
+                <th>Xp Unspent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number" @bind-value="charac.ExperienceGainIndividually"/></td>
+                <td>&emsp;</td>
+                <td><input type="number" @bind-value="charac.PartyXP" /></td>
+                <td>&emsp;</td>
+                <td><p>@charac.XpTotal()</p></td>
+                <td>&emsp;</td>
+                <td><input type="number" @bind-value="charac.ExperienceSpent" /></td>
+                <td>&emsp;</td>
+                <td><p>@charac.XpUnspent()</p></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h3>Characteristics</h3>
+    @if (charac.Characteristics != null && charac.Characteristics.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <td>Initial</td>
+                    <td>Advances</td>
+                    <td>Current</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cc in charac.Characteristics)
+                {
+                    <tr>
+                        <th>@cc.ShortName</th>
+                        <td>@cc.Initial</td>
+                        <td>@cc.Advances</td>
+                        <td>@cc.Current</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h3>Basic Skills</h3>
+    @if (charac.BasicSkills != null && charac.BasicSkills.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Cha</th>
+                    <th>Cha#</th>
+                    <th>Adv</th>
+                    <th>Skill</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bs in charac.BasicSkills)
+                {
+                    <tr>
+                        <td>@bs.Name</td>
+                        <td>@bs.SkillCharacteristic.ShortName</td>
+                        <td>@bs.SkillCharacteristic.Current</td>
+                        <td><input type="number" @bind-value="bs.Advances" name="bs.Advances"/></td>
+                        <td>@bs.Current</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h3>Advanced Skills</h3>
+    @if (charac.AdvancedSkills != null && charac.AdvancedSkills.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Cha</th>
+                    <th>Cha#</th>
+                    <th>Adv</th>
+                    <th>Skill</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ads in charac.AdvancedSkills)
+                {
+                    <tr>
+                        <td>@ads.Name</td>
+                        <td>@ads.SkillCharacteristic.ShortName</td>
+                        <td>@ads.SkillCharacteristic.Current</td>
+                        <td><input type="number" @bind-value="ads.Advances" name="ads.Advances" /></td>
+                        <td>@ads.Current</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h3>Talents</h3>
+    @if (charac.Talents != null && charac.Talents.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Times taken</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in charac.Talents)
+                {
+                    <tr>
+                        <td>@t.Name</td>
+                        <td><input type="text" size="20" @bind-value="t.Name" name="t.Name" /></td>
+                        <td><input type="number" @bind-value="t.TimesTaken" name="t.TimesTaken" /></td>
+                        <td><input type="text" size="45" @bind-value="t.Description" name="t.Description" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+@code {
+    [Parameter] public string id { get; set; }
+    private Character? charac = new Character();
+
+    protected override async Task OnInitializedAsync()
+    {
+        charac = await Http.GetFromJsonAsync<Character>($"api/Characters/{Int32.Parse(id)}");
+    }
+
+    internal class Character
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Player { get; set; }
+        public Party? Party { get; set; }
+        public string Species { get; set; } = "";
+        public string Class { get; set; } = "";
+        public string Career { get; set; } = "";
+        public string CareerTier { get; set; } = "";
+        public string Status { get; set; } = "";
+        public string Size { get; set; } = "";
+        public int Age { get; set; }
+        public string Height { get; set; } = "";
+        public string Hair { get; set; } = "";
+        public string Eyes { get; set; } = "";
+        public string StarSign { get; set; } = "";
+        public List<Characteristic> Characteristics { get; set; }
+        public List<AdvancedSkill> AdvancedSkills { get; set; }
+        public List<BasicSkill> BasicSkills { get; set; }
+        public List<Talents> Talents { get; set; }
+        public int FatePoints { get; set; }
+        public int FortunePoints { get; set; }
+        public int ResiliencePoints { get; set; }
+        public int ResolvePoints { get; set; }
+        public string Motivation { get; set; }
+        public string ShortTermAmbition { get; set; }
+        public string LongTermAmbition { get; set; }
+        public int MovementMove { get; set; }
+        public int MovementWalk { get; set; }
+        public int MovementRun { get; set; }
+        public int ExperienceGainIndividually { get; set; }
+        public int ExperienceSpent { get; set; }
+        public int Wounds { get; set; }
+        public string PartyName
+        {
+            get
+            {
+                if (Party != null) { return Party.Name; }
+                return "";
+            }
+            set
+            {
+                if (Party != null) { Party.Name = value; }
+            }
+        }
+        public string PartySTA
+        {
+            get
+            {
+                if (Party != null) { return Party.ShortTermPartyAmbition; }
+                return "";
+            }
+            set
+            {
+                if (Party != null) { Party.ShortTermPartyAmbition = value; }
+            }
+        }
+        public string PartyLTA
+        {
+            get
+            {
+                if (Party != null) { return Party.LongTermPartyAmbition; }
+                return "";
+            }
+            set
+            {
+                if (Party != null) { Party.LongTermPartyAmbition = value; }
+            }
+        }
+        public int PartyXP
+        {
+            get
+            {
+                if (Party != null) { return Party.PartyAwardedXP; }
+                return 0;
+            }
+            set
+            {
+                if (Party != null) { Party.PartyAwardedXP = value; }
+            }
+        }
+
+        public string GetPartyName()
+        {
+            if (Party != null) { return Party.Name; }
+            return "";
+        }
+
+        public string GetPartyLTA()
+        {
+            if (Party != null) { return Party.LongTermPartyAmbition; }
+            return "";
+        }
+
+        public string GetPartySTA()
+        {
+            if (Party != null) { return Party.ShortTermPartyAmbition; }
+            return "";
+        }
+
+        public int GetPartyXp()
+        {
+            if (Party != null) { return Party.PartyAwardedXP; }
+            return 0;
+        }
+
+        public int XpTotal()
+        {
+            if (Party != null) { return ExperienceGainIndividually + Party.PartyAwardedXP; }
+            return ExperienceGainIndividually;
+        }
+
+        public int XpUnspent()
+        {
+            return XpTotal() - ExperienceSpent;
+        }
+    }
+
+    internal class Party
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShortTermPartyAmbition { get; set; }
+        public string LongTermPartyAmbition { get; set; }
+        public int PartyAwardedXP { get; set; }
+    }
+
+    internal class Characteristic
+    {
+        public int Id { get; set; }
+        public string LongName { get; set; }
+        public string ShortName { get; set; }
+        public int Initial { get; set; }
+        public int Advances { get; set; }
+        public int Current => Initial + Advances;
+    }
+
+    internal class AdvancedSkill
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public Characteristic SkillCharacteristic { get; set; }
+        public int Advances { get; set; }
+        public int Current => SkillCharacteristic.Current + Advances;
+    }
+
+    internal class BasicSkill
+    {
+        public string Id { get; set; }
+        public string Name { get; set; } = null!;
+        public Characteristic SkillCharacteristic { get; set; } = null!;
+        public int Advances { get; set; }
+        public int Current => SkillCharacteristic.Current + Advances;
+    }
+
+    internal class Talents
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int TimesTaken { get; set; }
+        public string Description { get; set; }
+    }
+
+}

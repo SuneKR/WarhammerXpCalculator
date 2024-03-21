@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WarhammerXpCalculator.Models;
 
@@ -11,9 +12,11 @@ using WarhammerXpCalculator.Models;
 namespace WarhammerXpCalculator.Migrations
 {
     [DbContext(typeof(WarhammerXpCalcDB))]
-    partial class WarhammerXpCalcDBModelSnapshot : ModelSnapshot
+    [Migration("20240321170249_Second")]
+    partial class Second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,7 +162,7 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("Characteristics");
+                    b.ToTable("Characteristic");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.ExperienceLog", b =>
@@ -237,6 +240,7 @@ namespace WarhammerXpCalculator.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SkillCharacteristicId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -245,7 +249,7 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("SkillCharacteristicId");
 
-                    b.ToTable("AdvancedSkills");
+                    b.ToTable("AdvancedSkill");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Skills.BasicSkill", b =>
@@ -272,7 +276,7 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("SkillCharacteristicId");
 
-                    b.ToTable("BasicSkills");
+                    b.ToTable("BasicSkill");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Talents", b =>
@@ -336,7 +340,9 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasOne("WarhammerXpCalculator.Models.Characteristic", "SkillCharacteristic")
                         .WithMany()
-                        .HasForeignKey("SkillCharacteristicId");
+                        .HasForeignKey("SkillCharacteristicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SkillCharacteristic");
                 });

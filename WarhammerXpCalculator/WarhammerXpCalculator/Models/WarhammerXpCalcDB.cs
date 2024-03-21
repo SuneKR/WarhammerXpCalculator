@@ -11,8 +11,10 @@ namespace WarhammerXpCalculator.Models
         public virtual DbSet<Character> Characters { get; set; }
         public virtual DbSet<Party> Parties { get; set; }
         public virtual DbSet<ExperienceLog> ExperienceLogs { get; set; }
-        public DbSet<WarhammerXpCalculator.Models.Characteristic> Characteristic { get; set; } = default!;
-        public DbSet<WarhammerXpCalculator.Models.Skills.BasicSkill> BasicSkill { get; set; } = default!;
+        public virtual DbSet<Characteristic> Characteristics { get; set; }
+        public virtual DbSet<AdvancedSkill> AdvancedSkills { get; set; }
+        public virtual DbSet<BasicSkill> BasicSkills { get; set; }
+        public virtual DbSet<Talents> Talents { get; set; }
         
     }
 }
