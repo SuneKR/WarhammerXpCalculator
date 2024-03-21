@@ -32,15 +32,15 @@ else
             @foreach (var c in characters)
             {
                 <tr>
-                    <td>c.Name</td>
+                    <td>@c.Name</td>
                     <td>&emsp;</td>
-                    <td>c.Player</td>
+                    <td>@c.Player</td>
                     <td>&emsp;</td>
-                    <td>c.Party.Name</td>
+                    <td>@c.Party.Name</td>
                     <td>&emsp;</td>
-                    <td>c.Career</td>
+                    <td>@c.Career</td>
                     <td>&emsp;</td>
-                    <td>c.CarrerTier</td>
+                    <td>@c.CarrerTier</td>
                     <td>&emsp;</td>
                     <td>
                         <button class="btn-primary" @onclick="() => EditCharacter(c.Id)">Edit</button>
@@ -66,9 +66,18 @@ else
         public int Id { get; set; }
         public string Name { get; set; }
         public string Player { get; set; }
-        public string Party { get; set; }
+        public Party Party { get; set; }
         public string Career { get; set; }
         public string CarrerTier { get; set; }
+    }
+
+    internal class Party
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShortTermPartyAmbition { get; set; }
+        public string LongTermPartyAmbition { get; set; }
+        public int PartyAwardedXP { get; set; }
     }
 
     internal async void UpdateCharacters()
@@ -78,17 +87,9 @@ else
 
     internal async void CreateCharacter()
     {
-        Console.WriteLine("Trying to create new character");
-
-        var response = await Http.PostAsJsonAsync("api/Character", newCharacter);
-        if (response.IsSuccessStatusCode)
-        {
-            UpdateCharacters();
-        }
-        else
-        {
-            Console.WriteLine("Error. Not added.");
-        }
+        var response = await Http.PostAsJsonAsync("api/Characters", new { Name = newCharacter.Name });
+        if (response.IsSuccessStatusCode) { UpdateCharacters(); }
+        else { Console.WriteLine("Error. Not added."); }
     }
 
     internal void EditCharacter(int id)
@@ -101,8 +102,9 @@ else
 
     }
 
-    internal void DeleteCharacter(int id)
+    internal async void DeleteCharacter(int id)
     {
-
+        var response = await Http.DeleteAsync($"api/Characters/{id}");
+        if (response.IsSuccessStatusCode) { UpdateCharacters(); }
     }
 }

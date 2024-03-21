@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using WarhammerXpCalculator.Models.Skills;
 using static System.Net.WebRequestMethods;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace WarhammerXpCalculator.Models
 {
@@ -24,9 +26,15 @@ namespace WarhammerXpCalculator.Models
         public string Eyes { get; set; }
         public string StarSign { get; set; }
 
+
+
         //Characteristics
-        public Characteristic cWS { get; set; } = new Characteristic("Weapon Skill", "WS");
+
+        public List<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
+
         /*
+        public Characteristic cWS { get; set; } = new Characteristic("Weapon Skill", "WS");
+        
         public Characteristic cWS { get; set; } = await InitializeCharacteristic("Weapon Skill", "WS");
 
         public async Task<Characteristic> InitializeCharacteristic(string lname, string sname)
@@ -40,7 +48,7 @@ namespace WarhammerXpCalculator.Models
         }
         //var response = await Http.PostAsJsonAsync("api/Characteristics", newCharacter);
         //api/Characteristics
-        */
+        
 
         public Characteristic cBS { get; set; } = new Characteristic("Ballistic Skill", "BS");
         public Characteristic cS { get; set; } = new Characteristic("Strength", "S");
@@ -51,6 +59,7 @@ namespace WarhammerXpCalculator.Models
         public Characteristic cInt { get; set; } = new Characteristic("Intelligence", "Int");
         public Characteristic cWP { get; set; } = new Characteristic("Willpower", "WP");
         public Characteristic cFel { get; set; } = new Characteristic("Fellowship", "Fel");
+        */
 
         //Skills
         public List<AdvancedSkill> AdvancedSkills { get; set; } = new List<AdvancedSkill>();
@@ -87,16 +96,16 @@ namespace WarhammerXpCalculator.Models
             Hair = hair;
             Eyes = eyes;
             StarSign = starSign;
-            cWS.GenerateInitial();
-            cBS.GenerateInitial();
-            cS.GenerateInitial();
-            cT.GenerateInitial();
-            cI.GenerateInitial();
-            cAg.GenerateInitial();
-            cDex.GenerateInitial();
-            cInt.GenerateInitial();
-            cWP.GenerateInitial();
-            cFel.GenerateInitial();
+            //cWS.GenerateInitial();
+            //cBS.GenerateInitial();
+            //cS.GenerateInitial();
+            //cT.GenerateInitial();
+            //cI.GenerateInitial();
+            //cAg.GenerateInitial();
+            //cDex.GenerateInitial();
+            //cInt.GenerateInitial();
+            //cWP.GenerateInitial();
+            //cFel.GenerateInitial();
             FatePoints = fate;
             FortunePoints = fate;
             ResiliencePoints = resilience;
@@ -108,6 +117,7 @@ namespace WarhammerXpCalculator.Models
             ShortTermAmbition = shortTermAmbition;
             LongTermAmbition = longTermAmbition;
 
+            /*
             BasicSkills = new List<BasicSkill>
             {
                 new BasicSkill { Name = "Art (Every)", SkillCharacteristic = cDex },
@@ -136,7 +146,9 @@ namespace WarhammerXpCalculator.Models
                 new BasicSkill { Name = "Ride (Every)", SkillCharacteristic = cAg },
                 new BasicSkill { Name = "Row", SkillCharacteristic = cS },
                 new BasicSkill { Name = "Stealth (Every)", SkillCharacteristic = cAg },
+                
             };
+            */
         }
         public Character() : this("","","","","","",0,"","","","","","","",0,0,0) { }
 
@@ -148,6 +160,30 @@ namespace WarhammerXpCalculator.Models
         public int XpUnspent()
         {
             return XpTotal() - ExperienceSpent;
+        }
+
+        private async Task InitializeCharacteristics(string lname, string sname)
+        {
+            using (var Http = new HttpClient())
+            {
+                Http.BaseAddress = new Uri("http://localhost:5254");
+                Http.DefaultRequestHeaders.Accept.Clear();
+                Http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    HttpResponseMessage response = await Http.PostAsJsonAsync("api/Chraracteristics", new { LongName="lname", ShortName="sname" });
+                    response.EnsureSuccessStatusCode();
+
+                    string InitializedCharacteristicAsString = await response.Content.ReadAsStringAsync();
+                    Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(InitializedCharacteristicAsString);
+                    if (InitializedCharacteristic != null) { Characteristics.Add(InitializedCharacteristic); }
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine($@"Error with following error message: { e.Message }");
+                }
+            }
         }
     }
 
