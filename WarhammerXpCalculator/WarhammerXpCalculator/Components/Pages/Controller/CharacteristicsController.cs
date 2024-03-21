@@ -44,7 +44,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         // PUT: api/Characteristics/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacteristic(string id, Characteristic characteristic)
+        public async Task<IActionResult> PutCharacteristic(int id, Characteristic characteristic)
         {
             if (id != characteristic.Id)
             {
@@ -99,7 +99,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
 
         // DELETE: api/Characteristics/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCharacteristic(string id)
+        public async Task<IActionResult> DeleteCharacteristic(int id)
         {
             var characteristic = await _context.Characteristics.FindAsync(id);
             if (characteristic == null)
@@ -113,7 +113,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return NoContent();
         }
 
-        private bool CharacteristicExists(string id)
+        private bool CharacteristicExists(int id)
         {
             return _context.Characteristics.Any(e => e.Id == id);
         }

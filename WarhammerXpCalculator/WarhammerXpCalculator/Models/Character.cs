@@ -4,6 +4,7 @@ using WarhammerXpCalculator.Models.Skills;
 using static System.Net.WebRequestMethods;
 using System.Net.Http;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace WarhammerXpCalculator.Models
 {
@@ -11,7 +12,6 @@ namespace WarhammerXpCalculator.Models
     {
         public int Id { get; set; }
         public string Player { get; set; } = "";
-        //public virtual Party Party { get; set; } = new Party(0, "fightning Mongooses", "Fight a beaver", "Fight a dragon", 450);
         public virtual Party? Party { get; set; } = null;
         public string Name { get; set; } = "";
         public string Species { get; set; } = "";
@@ -25,8 +25,6 @@ namespace WarhammerXpCalculator.Models
         public string Hair { get; set; } = "";
         public string Eyes { get; set; } = "";
         public string StarSign { get; set; } = "";
-
-
 
         //Characteristics
 
@@ -106,6 +104,8 @@ namespace WarhammerXpCalculator.Models
             Motivation = motivation;
             ShortTermAmbition = shortTermAmbition;
             LongTermAmbition = longTermAmbition;
+
+            Debug.WriteLine("Before InitializeCharacteristic()");
 
             InitializeCharacteristic("Weapon Skill", "WS");
             InitializeCharacteristic("Ballistic Skill", "BS");
@@ -198,6 +198,8 @@ namespace WarhammerXpCalculator.Models
 
         private async Task InitializeCharacteristic(string lname, string sname)
         {
+            Debug.WriteLine($"InitializeCharacteristic({sname}) started");
+
             using (var Http = new HttpClient())
             {
                 Http.BaseAddress = new Uri("http://localhost:5254/");
@@ -212,11 +214,16 @@ namespace WarhammerXpCalculator.Models
 
                     string InitializedCharacteristicAsString = await response.Content.ReadAsStringAsync();
                     Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(InitializedCharacteristicAsString);
-                    if (InitializedCharacteristic != null) { Characteristics.Add(InitializedCharacteristic); }
+                    if (InitializedCharacteristic != null)
+                    {
+                        Characteristics.Add(InitializedCharacteristic);
+                        Debug.WriteLine($"InitializeCharacteristic({sname}) added");
+                    }
+                    else { Debug.WriteLine($"InitializedCharacteristic == null"); }
                 }
                 catch (HttpRequestException e)
                 {
-                    Console.WriteLine($@"Error with following error message: { e.Message }");
+                    Debug.WriteLine($@"Error with following error message: { e.Message }");
                 }
             }
         }
