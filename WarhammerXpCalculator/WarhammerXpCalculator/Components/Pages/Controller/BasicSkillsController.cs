@@ -30,7 +30,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
 
         // GET: api/BasicSkills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BasicSkill>> GetBasicSkill(string id)
+        public async Task<ActionResult<BasicSkill>> GetBasicSkill(int id)
         {
             var basicSkill = await _context.BasicSkills.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         // PUT: api/BasicSkills/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBasicSkill(string id, BasicSkill basicSkill)
+        public async Task<IActionResult> PutBasicSkill(int id, BasicSkill basicSkill)
         {
             if (id != basicSkill.Id)
             {
@@ -100,7 +100,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
 
         // DELETE: api/BasicSkills/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBasicSkill(string id)
+        public async Task<IActionResult> DeleteBasicSkill(int id)
         {
             var basicSkill = await _context.BasicSkills.FindAsync(id);
             if (basicSkill == null)
@@ -114,7 +114,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return NoContent();
         }
 
-        private bool BasicSkillExists(string id)
+        private bool BasicSkillExists(int id)
         {
             return _context.BasicSkills.Any(e => e.Id == id);
         }

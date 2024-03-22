@@ -12,8 +12,8 @@ using WarhammerXpCalculator.Models;
 namespace WarhammerXpCalculator.Migrations
 {
     [DbContext(typeof(WarhammerXpCalcDB))]
-    [Migration("20240321170249_Second")]
-    partial class Second
+    [Migration("20240321231504_Rebuild")]
+    partial class Rebuild
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,8 +138,11 @@ namespace WarhammerXpCalculator.Migrations
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Characteristic", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Advances")
                         .HasColumnType("int");
@@ -162,7 +165,7 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.ToTable("Characteristic");
+                    b.ToTable("Characteristics");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.ExperienceLog", b =>
@@ -226,8 +229,11 @@ namespace WarhammerXpCalculator.Migrations
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Skills.AdvancedSkill", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Advances")
                         .HasColumnType("int");
@@ -239,9 +245,8 @@ namespace WarhammerXpCalculator.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SkillCharacteristicId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SkillCharacteristicId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -249,13 +254,16 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("SkillCharacteristicId");
 
-                    b.ToTable("AdvancedSkill");
+                    b.ToTable("AdvancedSkills");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Skills.BasicSkill", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Advances")
                         .HasColumnType("int");
@@ -267,8 +275,8 @@ namespace WarhammerXpCalculator.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SkillCharacteristicId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SkillCharacteristicId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -276,13 +284,16 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasIndex("SkillCharacteristicId");
 
-                    b.ToTable("BasicSkill");
+                    b.ToTable("BasicSkills");
                 });
 
             modelBuilder.Entity("WarhammerXpCalculator.Models.Talents", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CharacterId")
                         .HasColumnType("int");
@@ -355,7 +366,9 @@ namespace WarhammerXpCalculator.Migrations
 
                     b.HasOne("WarhammerXpCalculator.Models.Characteristic", "SkillCharacteristic")
                         .WithMany()
-                        .HasForeignKey("SkillCharacteristicId");
+                        .HasForeignKey("SkillCharacteristicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SkillCharacteristic");
                 });

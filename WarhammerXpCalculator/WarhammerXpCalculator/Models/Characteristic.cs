@@ -17,7 +17,6 @@ namespace WarhammerXpCalculator.Models
             ShortName = sname;
             Initial = initialValue;
             Advances = 0;
-            Debug.WriteLine($"{sname} created");
         }
         public Characteristic(string lname, string sname) : this(lname, sname, 0) { }
         public Characteristic() : this("", "", 0) { }

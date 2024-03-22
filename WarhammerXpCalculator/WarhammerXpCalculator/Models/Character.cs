@@ -27,37 +27,7 @@ namespace WarhammerXpCalculator.Models
         public string StarSign { get; set; } = "";
 
         //Characteristics
-
         public List<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
-
-        /*
-        public Characteristic cWS { get; set; } = new Characteristic("Weapon Skill", "WS");
-        
-        public Characteristic cWS { get; set; } = await InitializeCharacteristic("Weapon Skill", "WS");
-
-        public async Task<Characteristic> InitializeCharacteristic(string lname, string sname)
-        {
-            var response = await Http.PostAsJsonAsync("api/Characteristics", new Characteristic(lname, sname));
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<Characteristic>();
-            }
-            return null;
-        }
-        //var response = await Http.PostAsJsonAsync("api/Characteristics", newCharacter);
-        //api/Characteristics
-        
-
-        public Characteristic cBS { get; set; } = new Characteristic("Ballistic Skill", "BS");
-        public Characteristic cS { get; set; } = new Characteristic("Strength", "S");
-        public Characteristic cT { get; set; } = new Characteristic("Toughness", "T");
-        public Characteristic cI { get; set; } = new Characteristic("Initiative", "I");
-        public Characteristic cAg { get; set; } = new Characteristic("Agility", "Ag");
-        public Characteristic cDex { get; set; } = new Characteristic("Dexterity", "Dex");
-        public Characteristic cInt { get; set; } = new Characteristic("Intelligence", "Int");
-        public Characteristic cWP { get; set; } = new Characteristic("Willpower", "WP");
-        public Characteristic cFel { get; set; } = new Characteristic("Fellowship", "Fel");
-        */
 
         //Skills
         public List<AdvancedSkill> AdvancedSkills { get; set; } = new List<AdvancedSkill>();
@@ -105,46 +75,18 @@ namespace WarhammerXpCalculator.Models
             ShortTermAmbition = shortTermAmbition;
             LongTermAmbition = longTermAmbition;
 
-            Debug.WriteLine("Before InitializeCharacteristic()");
-
-            InitializeCharacteristic("Weapon Skill", "WS");
-            InitializeCharacteristic("Ballistic Skill", "BS");
-            InitializeCharacteristic("Strength", "S");
-            InitializeCharacteristic("Toughness", "T");
-            InitializeCharacteristic("Initiative", "I");
-            InitializeCharacteristic("Agility", "Ag");
-            InitializeCharacteristic("Dexterity", "Dex");
-            InitializeCharacteristic("Intelligence", "Int");
-            InitializeCharacteristic("Willpower", "WP");
-            InitializeCharacteristic("Fellowship", "Fel");
-
-
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "WS") == null) { InitializeCharacteristic("Weapon Skill", "WS"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "BS") == null) { InitializeCharacteristic("Ballistic Skill", "BS"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "S") == null) { InitializeCharacteristic("Strength", "S"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "S") == null) { InitializeCharacteristic("Toughness", "T"); }
+            if (Characteristics.FirstOrDefault(c => c.ShortName == "I") == null) { InitializeCharacteristic("Initiative", "I"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "Ag") == null) { InitializeCharacteristic("Agility", "Ag"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "Dex") == null) { InitializeCharacteristic("Dexterity", "Dex"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "Int") == null) { InitializeCharacteristic("Intelligence", "Int"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "WP") == null) { InitializeCharacteristic("Willpower", "WP"); }
+            if(Characteristics.FirstOrDefault(c => c.ShortName == "Fel") == null) { InitializeCharacteristic("Fellowship", "Fel"); }
 
             /*
-            Characteristics.Add(new Characteristic { LongName = "Weapon Skill", ShortName = "WS" });
-            Characteristics.Add(new Characteristic { LongName = "Ballistic Skill", ShortName = "BS" });
-            Characteristics.Add(new Characteristic { LongName = "Strength", ShortName = "S" });
-            Characteristics.Add(new Characteristic { LongName = "Toughness", ShortName = "T" });
-            Characteristics.Add(new Characteristic { LongName = "Initiative", ShortName = "I" });
-            Characteristics.Add(new Characteristic { LongName = "Agility", ShortName = "Ag" });
-            Characteristics.Add(new Characteristic { LongName = "Dexterity", ShortName = "Dex" });
-            Characteristics.Add(new Characteristic { LongName = "Intelligence", ShortName = "Int" });
-            Characteristics.Add(new Characteristic { LongName = "Willpower", ShortName = "WP" });
-            Characteristics.Add(new Characteristic { LongName = "Fellowship", ShortName = "Fel" });
-             * 
-            Characteristics = new List<Characteristics>
-            {
-                new Characteristic { LongName = "Weapon Skill", ShortName = "WS" },
-                new Characteristic { LongName = "Ballistic Skill", ShortName = "BS" },
-                new Characteristic { LongName = "Strength", ShortName = "S" },
-                new Characteristic { LongName = "Toughness", ShortName = "T" },
-                new Characteristic { LongName = "Initiative", ShortName = "I" },
-                new Characteristic { LongName = "Agility", ShortName = "Ag" },
-                new Characteristic { LongName = "Dexterity", ShortName = "Dex" },
-                new Characteristic { LongName = "Intelligence", ShortName = "Int" },
-                new Characteristic { LongName = "Willpower", ShortName = "WP" },
-                new Characteristic { LongName = "Fellowship", ShortName = "Fel" },
-            };
 
             BasicSkills = new List<BasicSkill>
             {
@@ -198,8 +140,6 @@ namespace WarhammerXpCalculator.Models
 
         private async Task InitializeCharacteristic(string lname, string sname)
         {
-            Debug.WriteLine($"InitializeCharacteristic({sname}) started");
-
             using (var Http = new HttpClient())
             {
                 Http.BaseAddress = new Uri("http://localhost:5254/");
@@ -208,22 +148,19 @@ namespace WarhammerXpCalculator.Models
 
                 try
                 {
-                    var characteristicData = new { LongName = lname, ShortName = sname };
-                    HttpResponseMessage response = await Http.PostAsJsonAsync("api/Chraracteristics", characteristicData);
+                    Characteristic NewCharacteristic = new Characteristic { LongName = lname, ShortName = sname };
+                    var response = await Http.PostAsJsonAsync("api/Characteristics", NewCharacteristic);
                     response.EnsureSuccessStatusCode();
 
-                    string InitializedCharacteristicAsString = await response.Content.ReadAsStringAsync();
-                    Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(InitializedCharacteristicAsString);
-                    if (InitializedCharacteristic != null)
-                    {
-                        Characteristics.Add(InitializedCharacteristic);
-                        Debug.WriteLine($"InitializeCharacteristic({sname}) added");
-                    }
-                    else { Debug.WriteLine($"InitializedCharacteristic == null"); }
+                    
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(responseBody);
+                    if (InitializedCharacteristic != null) { Characteristics.Add(InitializedCharacteristic); }
                 }
                 catch (HttpRequestException e)
                 {
                     Debug.WriteLine($@"Error with following error message: { e.Message }");
+
                 }
             }
         }

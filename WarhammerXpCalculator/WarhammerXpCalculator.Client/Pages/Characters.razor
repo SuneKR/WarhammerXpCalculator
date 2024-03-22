@@ -4,8 +4,8 @@
 @rendermode InteractiveWebAssembly
 
 <h3>Characters</h3>
-<input type="text" @bind="newCharacter.Name" placeholder="Name" />
-<input type="text" @bind="newCharacter.Player" placeholder="Player" />
+<input type="text" @bind-value="newCharacter.Name" placeholder="Name" />
+<input type="text" @bind-value="newCharacter.Player" placeholder="Player" />
 <button class="btn-primary" @onclick="CreateCharacter">New Character</button>
 
 @if (characters == null)
@@ -56,7 +56,7 @@ else
 
 @code {
     private Character[]? characters;
-    private Character newCharacter = new Character();
+    private CharacterShell? newCharacter = new CharacterShell();
     [Inject] private NavigationManager NavManager { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -72,57 +72,11 @@ else
         public Party? Party { get; set; }
         public string Career { get; set; }
         public string CarrerTier { get; set; }
-        public List<Characteristic> Characteristics { get; set; }
-        public List<AdvancedSkill> AdvancedSkills { get; set; }
-        public List<BasicSkill> BasicSkills { get; set; }
-        public List<Talents> Talents { get; set; }
-
-        // public Character()
-        // {
-
-        //     InitializeCharacteristic("Weapon Skill", "WS");
-        //     InitializeCharacteristic("Ballistic Skill", "BS");
-        //     InitializeCharacteristic("Strength", "S");
-        //     InitializeCharacteristic("Toughness", "T");
-        //     InitializeCharacteristic("Initiative", "I");
-        //     InitializeCharacteristic("Agility", "Ag");
-        //     InitializeCharacteristic("Dexterity", "Dex");
-        //     InitializeCharacteristic("Intelligence", "Int");
-        //     InitializeCharacteristic("Willpower", "WP");
-        //     InitializeCharacteristic("Fellowship", "Fel");
-        // }
 
         public string GetPartyName()
         {
             if (Party != null ) { return Party.Name; }
             return "";
-        }
-
-        private async Task InitializeCharacteristic(string lname, string sname)
-        {
-            Console.WriteLine($"InitializeCharacteristic({sname})");
-
-            using (var Http = new HttpClient())
-            {
-                Http.BaseAddress = new Uri("http://localhost:5254/");
-                Http.DefaultRequestHeaders.Accept.Clear();
-                Http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                try
-                {
-                    var characteristicData = new { LongName = lname, ShortName = sname };
-                    HttpResponseMessage response = await Http.PostAsJsonAsync("api/Chraracteristics", characteristicData);
-                    response.EnsureSuccessStatusCode();
-
-                    string InitializedCharacteristicAsString = await response.Content.ReadAsStringAsync();
-                    Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(InitializedCharacteristicAsString);
-                    if (InitializedCharacteristic != null) { Characteristics.Add(InitializedCharacteristic); }
-                }
-                catch (HttpRequestException e)
-                {
-                    Console.WriteLine($@"Error with following error message: {e.Message}");
-                }
-            }
         }
     }
 
@@ -135,40 +89,10 @@ else
         public int PartyAwardedXP { get; set; }
     }
 
-    internal class Characteristic
+    internal class CharacterShell
     {
-        public int Id { get; set; }
-        public string LongName { get; set; }
-        public string ShortName { get; set; }
-        public int Initial { get; set; }
-        public int Advances { get; set; }
-        public int Current => Initial + Advances;
-    }
-
-    internal class AdvancedSkill
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public Characteristic SkillCharacteristic { get; set; }
-        public int Advances { get; set; }
-        public int Current => SkillCharacteristic.Current + Advances;
-    }
-
-    internal class BasicSkill
-    {
-        public string Id { get; set; }
-        public string Name { get; set; } = null!;
-        public Characteristic SkillCharacteristic { get; set; } = null!;
-        public int Advances { get; set; }
-        public int Current => SkillCharacteristic.Current + Advances;
-    }
-
-    internal class Talents
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public int TimesTaken { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = "";
+        public string Player { get; set; } = "";
     }
 
     internal async void UpdateCharacters()

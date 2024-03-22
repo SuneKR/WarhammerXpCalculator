@@ -106,23 +106,13 @@ else
     @if (charac.Characteristics != null && charac.Characteristics.Count > 0)
     {
         <table class="table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <td>Initial</td>
-                    <td>Advances</td>
-                    <td>Current</td>
-                </tr>
-            </thead>
             <tbody>
                 @foreach (var cc in charac.Characteristics)
                 {
-                    <tr>
-                        <th>@cc.ShortName</th>
-                        <td>@cc.Initial</td>
-                        <td>@cc.Advances</td>
-                        <td>@cc.Current</td>
-                    </tr>
+                    <th>@cc.ShortName</th>
+                    <td>@cc.Initial</td>
+                    <td>@cc.Advances</td>
+                    <td>@cc.Current</td>
                 }
             </tbody>
         </table>
@@ -213,7 +203,7 @@ else
 
 @code {
     [Parameter] public string id { get; set; }
-    private Character? charac = new Character();
+    private Character? charac;
 
     protected override async Task OnInitializedAsync()
     {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WarhammerXpCalculator.Models;
+using System.Diagnostics;
 
 namespace WarhammerXpCalculator.Components.Pages.Controller
 {
@@ -75,12 +76,13 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         // POST: api/Characteristics
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Characteristic>> PostCharacteristic(Characteristic characteristic)
+        public async Task<ActionResult<Characteristic>> PostCharacteristic([FromBody] Characteristic characteristic)
         {
             _context.Characteristics.Add(characteristic);
             try
             {
                 await _context.SaveChangesAsync();
+
             }
             catch (DbUpdateException)
             {
@@ -93,8 +95,8 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetCharacteristic", new { id = characteristic.Id }, characteristic);
+            //return CreatedAtAction("GetCharacteristic", new { id = characteristic.Id }, characteristic);
+            return Ok(characteristic);
         }
 
         // DELETE: api/Characteristics/5

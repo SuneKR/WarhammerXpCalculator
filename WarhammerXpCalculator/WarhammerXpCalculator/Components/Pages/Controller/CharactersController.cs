@@ -77,9 +77,6 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
         [HttpPost]
         public async Task<ActionResult<Character>> PostCharacter(Character character)
         {
-            //Character CreatedCharacter = new Character();
-            //CreatedCharacter = character;
-            //_context.Characters.Add(CreatedCharacter);
             _context.Characters.Add(character);
             await _context.SaveChangesAsync();
 
