@@ -56,7 +56,7 @@ else
 
 @code {
     private Character[]? characters;
-    private CharacterShell? newCharacter = new CharacterShell();
+    private Character? newCharacter = new Character();
     [Inject] private NavigationManager NavManager { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -87,12 +87,6 @@ else
         public string ShortTermPartyAmbition { get; set; }
         public string LongTermPartyAmbition { get; set; }
         public int PartyAwardedXP { get; set; }
-    }
-
-    internal class CharacterShell
-    {
-        public string Name { get; set; } = "";
-        public string Player { get; set; } = "";
     }
 
     internal async void UpdateCharacters()

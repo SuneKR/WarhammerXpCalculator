@@ -6,53 +6,52 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WarhammerXpCalculator.Models;
-using WarhammerXpCalculator.Models.Skills;
 
 namespace WarhammerXpCalculator.Components.Pages.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CharactersController : ControllerBase
+    public class TalentsController : ControllerBase
     {
         private readonly WarhammerXpCalcDB _context;
 
-        public CharactersController(WarhammerXpCalcDB context)
+        public TalentsController(WarhammerXpCalcDB context)
         {
             _context = context;
         }
 
-        // GET: api/Characters
+        // GET: api/Talents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
+        public async Task<ActionResult<IEnumerable<Talents>>> GetTalents()
         {
-            return await _context.Characters.ToListAsync();
+            return await _context.Talents.ToListAsync();
         }
 
-        // GET: api/Characters/5
+        // GET: api/Talents/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacter(int id)
+        public async Task<ActionResult<Talents>> GetTalents(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
+            var talents = await _context.Talents.FindAsync(id);
 
-            if (character == null)
+            if (talents == null)
             {
                 return NotFound();
             }
 
-            return character;
+            return talents;
         }
 
-        // PUT: api/Characters/5
+        // PUT: api/Talents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacter(int id, Character character)
+        public async Task<IActionResult> PutTalents(int id, Talents talents)
         {
-            if (id != character.Id)
+            if (id != talents.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(character).State = EntityState.Modified;
+            _context.Entry(talents).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +59,7 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CharacterExists(id))
+                if (!TalentsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +72,36 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return NoContent();
         }
 
-        // POST: api/Characters
+        // POST: api/Talents
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Character>> PostCharacter(Character character)
+        public async Task<ActionResult<Talents>> PostTalents(Talents talents)
         {
-            _context.Characters.Add(character);
+            _context.Talents.Add(talents);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCharacter", new { id = character.Id }, character);
+            return CreatedAtAction("GetTalents", new { id = talents.Id }, talents);
         }
 
-        // DELETE: api/Characters/5
+        // DELETE: api/Talents/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCharacter(int id)
+        public async Task<IActionResult> DeleteTalents(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
-            if (character == null)
+            var talents = await _context.Talents.FindAsync(id);
+            if (talents == null)
             {
                 return NotFound();
             }
 
-            _context.Characters.Remove(character);
+            _context.Talents.Remove(talents);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CharacterExists(int id)
+        private bool TalentsExists(int id)
         {
-            return _context.Characters.Any(e => e.Id == id);
+            return _context.Talents.Any(e => e.Id == id);
         }
     }
 }

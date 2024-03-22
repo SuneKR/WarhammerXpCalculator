@@ -5,6 +5,7 @@ namespace WarhammerXpCalculator.Models
     public class Characteristic
     {
         public int Id { get; set; }
+        public int? CharacterId { get; set; }
         public string LongName { get; set; }
         public string ShortName { get; set; }
         public int Initial { get; set; }

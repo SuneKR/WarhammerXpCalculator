@@ -6,6 +6,8 @@ namespace WarhammerXpCalculator.Models
 {
     public class WarhammerXpCalcDB : DbContext
     {
+        public WarhammerXpCalcDB() { }
+
         public WarhammerXpCalcDB(DbContextOptions<WarhammerXpCalcDB> options) : base(options) { }
 
         public virtual DbSet<Character> Characters { get; set; }

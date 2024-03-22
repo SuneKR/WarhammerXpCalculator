@@ -41,6 +41,19 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return experienceLog;
         }
 
+        // GET: api/ExperienceLogs/{id}
+        //Returns all ExperienceLogs belonging to single character
+        [HttpGet("c{id}")]
+        public async Task<ActionResult<IEnumerable<ExperienceLog>>> GetExperienceLogsByCharacterId(int id)
+        {
+
+            var logSet = await _context.ExperienceLogs.Where(l => l.CharacterId == id).ToListAsync();
+
+            if (logSet == null || logSet.Count == 0) { return NotFound(); }
+
+            return logSet;
+        }
+
         // PUT: api/ExperienceLogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -28,9 +28,11 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return await _context.Characteristics.ToListAsync();
         }
 
+        
+
         // GET: api/Characteristics/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Characteristic>> GetCharacteristic(string id)
+        public async Task<ActionResult<Characteristic>> GetCharacteristic(int id)
         {
             var characteristic = await _context.Characteristics.FindAsync(id);
 
@@ -40,6 +42,19 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             }
 
             return characteristic;
+        }
+
+        // GET: api/Characteristics/{id}
+        //Returns all characteristics belonging to single character
+        [HttpGet("c{id}")]
+        public async Task<ActionResult<IEnumerable<Characteristic>>> GetCharacteristicByCharacterId(int id)
+        {
+
+            var characteristicsSet = await _context.Characteristics.Where(c => c.CharacterId == id).ToListAsync();
+
+            if (characteristicsSet == null || characteristicsSet.Count == 0) { return NotFound(); }
+
+            return characteristicsSet;
         }
 
         // PUT: api/Characteristics/5

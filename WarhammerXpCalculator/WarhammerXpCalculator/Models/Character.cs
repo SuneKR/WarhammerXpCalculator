@@ -27,11 +27,11 @@ namespace WarhammerXpCalculator.Models
         public string StarSign { get; set; } = "";
 
         //Characteristics
-        public List<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
+        public List<int> CharacteristicIds { get; set; } = new List<int>();
 
         //Skills
-        public List<AdvancedSkill> AdvancedSkills { get; set; } = new List<AdvancedSkill>();
-        public List<BasicSkill> BasicSkills { get; set; } = new List<BasicSkill>();
+        public List<int> AdvancedSkillIds { get; set; } = new List<int>();
+        public List<int> BasicSkillIds { get; set; } = new List<int>();
         
         //Talents
         public List<Talents> Talents { get; set; } = new List<Talents>();
@@ -75,6 +75,13 @@ namespace WarhammerXpCalculator.Models
             ShortTermAmbition = shortTermAmbition;
             LongTermAmbition = longTermAmbition;
 
+            if(CharacteristicIds == null || CharacteristicIds.Count != 10)
+            {
+                CharacteristicIds = new List<int>();
+                SetupCharacteristics();
+            }
+
+            /*
             if(Characteristics.FirstOrDefault(c => c.ShortName == "WS") == null) { InitializeCharacteristic("Weapon Skill", "WS"); }
             if(Characteristics.FirstOrDefault(c => c.ShortName == "BS") == null) { InitializeCharacteristic("Ballistic Skill", "BS"); }
             if(Characteristics.FirstOrDefault(c => c.ShortName == "S") == null) { InitializeCharacteristic("Strength", "S"); }
@@ -138,6 +145,20 @@ namespace WarhammerXpCalculator.Models
             return XpTotal() - ExperienceSpent;
         }
 
+        public async void SetupCharacteristics()
+        {
+            await InitializeCharacteristic("Weapon Skill", "WS");
+            await InitializeCharacteristic("Ballistic Skill", "BS");
+            await InitializeCharacteristic("Strength", "S");
+            await InitializeCharacteristic("Toughness", "T");
+            await InitializeCharacteristic("Initiative", "I");
+            await InitializeCharacteristic("Agility", "Ag");
+            await InitializeCharacteristic("Dexterity", "Dex");
+            await InitializeCharacteristic("Intelligence", "Int");
+            await InitializeCharacteristic("Willpower", "WP");
+            await InitializeCharacteristic("Fellowship", "Fel");
+        }
+
         private async Task InitializeCharacteristic(string lname, string sname)
         {
             using (var Http = new HttpClient())
@@ -148,14 +169,14 @@ namespace WarhammerXpCalculator.Models
 
                 try
                 {
-                    Characteristic NewCharacteristic = new Characteristic { LongName = lname, ShortName = sname };
+                    Characteristic NewCharacteristic = new Characteristic { LongName = lname, ShortName = sname, CharacterId = Id };
                     var response = await Http.PostAsJsonAsync("api/Characteristics", NewCharacteristic);
                     response.EnsureSuccessStatusCode();
 
                     
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Characteristic? InitializedCharacteristic = JsonSerializer.Deserialize<Characteristic>(responseBody);
-                    if (InitializedCharacteristic != null) { Characteristics.Add(InitializedCharacteristic); }
+                    if (InitializedCharacteristic != null) { CharacteristicIds.Add(InitializedCharacteristic.Id); }
                 }
                 catch (HttpRequestException e)
                 {

@@ -28,6 +28,8 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             return await _context.BasicSkills.ToListAsync();
         }
 
+        
+
         // GET: api/BasicSkills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BasicSkill>> GetBasicSkill(int id)
@@ -40,6 +42,19 @@ namespace WarhammerXpCalculator.Components.Pages.Controller
             }
 
             return basicSkill;
+        }
+
+        // GET: api/BasicSkills/{id}
+        //Returns all ExperienceLogs belonging to single character
+        [HttpGet("/c{id}")]
+        public async Task<ActionResult<IEnumerable<BasicSkill>>> GetBasicSkillByCharacterId(int id)
+        {
+
+            var bSkillSet = await _context.BasicSkills.Where(bs => bs.CharacterId == id).ToListAsync();
+
+            if (bSkillSet == null || bSkillSet.Count == 0) { return NotFound(); }
+
+            return bSkillSet;
         }
 
         // PUT: api/BasicSkills/5

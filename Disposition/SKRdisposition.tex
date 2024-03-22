@@ -1,0 +1,40 @@
+%%%%%%
+%	Præamble
+%%%%%%
+
+\documentclass{article}
+
+\include{./praeambel}
+
+%%%%%%
+%	Indhold
+%%%%%%
+
+\begin{document}
+
+\section*{Warhammer Fantasy Roleplay Character Manager}
+Rollespil er min store passion og har været det over 20 år, men et stående problemer er, at der kan være en en del papirarbejde at holde styr på.\newline{}
+Det er selvfølgelig ikke ens for alle system og et system, hvor mine spillere konstant har bedt mig regne deres karakter efter er \textit{Warhammer Fantasy Roleplay}. I startet med at være fokusere meget på xp udregning, men endte med at blive nedprioriteret til et \textit{MVP}, som er bare en \textit{"character manager"}.
+
+\section*{Produkt}
+Produktet er en \textit{Blazor Web App} skrevet i \textit{Core 8.0}.\newline{}
+Der er bygget en backend API med 7 modeller, 1 interface og 7 controllers.\newline{}
+\textbf{Modellerne} og \textbf{interface}'n er bygger fra bunden\newline{}
+\textbf{Controller}'erne er genere\textit{Entity Framework} og justerede og udbygget efter behov.\par{}
+
+På Clientsiden giver \textit{Characters.razor} og \textit{Parties.razor} et overblik over de indtastede medlemmer af henholdsvis \textbf{Character} og \textbf{Party} klasserne.\newline{}
+\textit{CharacterSheet.razor} udgør \textbf{edit} funktionen til \textbf{Character}-instanserne og er ikke færdig. Flere af implementeringer afhang dog af den side, så derfor er 4 af \textit{controller}'ne/\textit{modelerne} ikke rigtigt implementeret, men jeg har bibeholdt dem for at man kan se arbejdet der foreligger.\par{}
+
+I forhold til \textit{API} er det nok værd særligt kigge \textbf{Character}-klasse og dens initialisering af \textbf{Characteristic}-klasen, som er gjort via API-kald. I begge \textbf{Skill} klasser arbejder jeg med tilkobling på en anden måde, hvilket var at vise forskellige måder at lave koblinger med modellerne på.\newline{}
+API'en er testet i og kan tilgås via Postman.
+
+\section*{Database}
+Til projektet er oprettet følgende tabeller:
+\textbf{AdvancedSkills}, \textbf{BasicSkills}, \textbf{Characteristics}, \textbf{Characters}, \textbf{ExperienceLogs}, \textbf{Parties} og \textbf{Talents}
+
+\section*{Refleksioner og Videreudvikling}
+Projektet er slået for stort op og jeg skulle have begrænset det meget mere tidligere.\newline{}
+Endvidere skulle det være mindre \textit{frontend}-afhængig, således det var lettere at vise frem. Jeg håber dog på lige at gøre nogle af frontned tingene færdige til eksamen, således intentionen bedre kan forklares.\newline{}
+I forhold til videreudvikling er de åbenlyse ting selvfølgelig er færdigudvikle frontned og implementere de sidste klasser, men udover det, så ville jeg gerne implementere langt flere modeller, så som \textit{careers} og have indtastet mere information, således mere er "automatiseret" for brugeren.
+
+\end{document}
